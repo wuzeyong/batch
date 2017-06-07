@@ -1,0 +1,15 @@
+#######开放模式############
+
+###############
+#    folder   #
+###############
+batch_core/target/
+batch_parent/target/
+batch_project/target/
+.idea/
+
+###############
+#  fixed file #
+###############
+*.iml
+*.bak

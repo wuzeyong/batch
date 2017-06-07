@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:batch="http://www.wuzeyong.com/schema/batch"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.wuzeyong.com/schema/batch http://www.wuzeyong.com/schema/batch.xsd">
+
+    <bean class="com.wuzeyong.batch.utils.SpringContextUtils" />
+
+    <bean id="testUnit1" class="com.wuzeyong.batch.extra.TestUnit1"/>
+    <bean id="testUnit2" class="com.wuzeyong.batch.extra.TestUnit2"/>
+    <bean id="testUnit3" class="com.wuzeyong.batch.extra.TestUnit3"/>
+
+
+    <!-- 单机批量策略 -->
+    <batch:paging-strategy id="testStrategy1" paging-mode="single" total-paging="12" >
+        <batch:machine-strategies>
+            <batch:machine-strategy server-id="testServer1"/>
+        </batch:machine-strategies>
+    </batch:paging-strategy>
+
+    <!-- 多机批量策略，暂无资源管理器调度时，需写死固定机器处理固定分页数据,后续使用资源管理调度器，动态调整分页配置-->
+    <batch:paging-strategy id="testStrategy2" paging-mode="multi" total-paging="12" >
+        <batch:machine-strategies>
+            <batch:machine-strategy server-id="testServer1" handle-paging="1,2,3" data-source=""/>
+            <batch:machine-strategy server-id="testServer2" handle-paging="4,5,6"/>
+            <batch:machine-strategy server-id="testServer3" handle-paging="7,8,9"/>
+            <batch:machine-strategy server-id="testServer4" handle-paging="10,11,12"/>
+        </batch:machine-strategies>
+    </batch:paging-strategy>
+
+    <batch:task id="batchTask" name="平安银行日终批量程序" describe="平安银行日终批量程序">
+        <batch:props>
+            <prop key="testBatchTask-property-1">testBatchTask-property-1</prop>
+            <prop key="testBatchTask-property2">testBatchTask-property-2</prop>
+        </batch:props>
+        <batch:targets>
+            <batch:target id="testTarget1" name="测试目标1" describe="测试目标1"  enable="true">
+                <batch:units>
+                    <batch:unit id="testUnit1" name="测试执行单元1" describe="测试执行单元1" executeClass="testUnit1" paging-strategy="testStrategy1"/>
+
+                    <batch:unit id="testUnit2" name="测试执行单元2" describe="测试执行单元2" executeClass="testUnit2" paging-strategy="testStrategy2">
+                        <batch:props >
+                            <prop key="testUnit2-property-1">testUnit2-property-1</prop>
+                            <prop key="testUnit2-property-2">testUnit2-property-2</prop>
+                        </batch:props>
+                    </batch:unit>
+
+                    <batch:unit id="testUnit3" name="测试执行单元3" describe="测试执行单元3" executeClass="testUnit3" paging-strategy="testStrategy1"></batch:unit>
+
+                </batch:units>
+
+                <batch:routes>
+                    <batch:route currentUnit="testUnit1" executeStatus="unexecute" nextUnit="testUnit1"></batch:route>
+
+                    <batch:route currentUnit="testUnit1" executeStatus="successful" nextUnit="testUnit2"></batch:route>
+
+                    <batch:route currentUnit="testUnit2" executeStatus="successful" nextUnit="testUnit3"></batch:route>
+                </batch:routes>
+            </batch:target>
+        </batch:targets>
+    </batch:task>
+
+</beans>

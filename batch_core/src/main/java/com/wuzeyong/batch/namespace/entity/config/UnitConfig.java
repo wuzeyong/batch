@@ -1,0 +1,32 @@
+package com.wuzeyong.batch.namespace.entity.config;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.util.Properties;
+
+/**
+ * @author WUZEYONG089
+ */
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+public class UnitConfig  {
+
+    private  String id;
+
+    private  String name;
+
+    private  String describe;
+
+    private  String allowManualExecute;
+
+    private  String executeClass;
+
+    private  PagingStrategyConfig pagingStrategy;
+
+    private  Properties props;
+}
