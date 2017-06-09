@@ -28,5 +28,7 @@ public class UnitConfig  {
 
     private  PagingStrategyConfig pagingStrategy;
 
+    private String pcMode;//生产者消费者模式
+
     private  Properties props;
 }

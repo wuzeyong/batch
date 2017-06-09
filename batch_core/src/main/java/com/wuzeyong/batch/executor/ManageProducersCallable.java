@@ -3,6 +3,8 @@ package com.wuzeyong.batch.executor;
 import com.wuzeyong.batch.constant.BatchCoreConstant;
 import com.wuzeyong.batch.result.BaseResult;
 import com.wuzeyong.batch.wrapper.ProducerExecutorWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.concurrent.Callable;
  */
 public class ManageProducersCallable extends AbstractCallableManager<BaseTask,BaseResult> implements Callable<String>{
 
+    private static Logger LOGGER = LoggerFactory.getLogger(ManageProducersCallable.class);
 
     protected Collection<ProducerExecutorWrapper> producerExecutorWrappers;
 
@@ -25,14 +28,10 @@ public class ManageProducersCallable extends AbstractCallableManager<BaseTask,Ba
     }
 
     @Override
-    public String call() {
-        String executeStatus ;
+    public String call() throws Exception{
         final boolean isExceptionThrown = ExecutorExceptionHandler.isExceptionThrown();
         final Map<String, Object> dataMap = ExecutorDataMap.getDataMap();
-        //if(1 == producerExecutorWrappers.size()){
-        //   return Collections.singletonList(executeBatchInternal(producerExecutorWrappers.iterator().next(), isExceptionThrown, dataMap)).get(0).getExecuteStatus();
-        //}
-        executeStatus = taskExecutor.getExecutorEngine().execute(producerExecutorWrappers, new ExecuteUnit<ProducerExecutorWrapper, BaseResult>() {
+        taskExecutor.getExecutorEngine().execute(producerExecutorWrappers, new ExecuteUnit<ProducerExecutorWrapper, BaseResult>() {
             @Override
             public BaseResult execute(ProducerExecutorWrapper input) throws Exception {
                 return executeBatchInternal(input, isExceptionThrown, dataMap);
@@ -52,6 +51,8 @@ public class ManageProducersCallable extends AbstractCallableManager<BaseTask,Ba
                 else return BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL;
             }
         });
-        return executeStatus;
+        LOGGER.info("[{}] Producer Threads Handle Tasks with PcMode!",producerThreads.size());
+        producerThreads.clear();
+        return BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL;
     }
 }

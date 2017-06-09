@@ -26,6 +26,7 @@
             <xsd:attribute name="allowManualExecute" type="xsd:string" use="optional"/>
             <xsd:attribute name="executeClass" type="xsd:string" use="required"/>
             <xsd:attribute name="paging-strategy" type="xsd:string" use="required"/>
+            <xsd:attribute name="pcMode" type="xsd:string" use="optional" default="N" />
         </xsd:complexType>
     </xsd:element>
 

@@ -125,6 +125,7 @@ public class BatchRuleBuilder {
         unit.setId(unitConfig.getId());
         unit.setName(unitConfig.getName());
         unit.setAllowManualExecute(unitConfig.getAllowManualExecute());
+        unit.setPcMode(unitConfig.getPcMode());
         unit.setDescribe(unitConfig.getDescribe());
         unit.setProps(unitConfig.getProps());
         unit.setTarget(target);

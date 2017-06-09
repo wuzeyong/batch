@@ -29,7 +29,7 @@ public abstract class AbstractExecutorWrapper<I,O> implements ExecutorWrapper<I,
 
     protected BlockingQueue<I> taskPoolQueue;
 
-    protected abstract O doExecute();
+    protected abstract O doExecute() throws Exception;
 
     protected abstract List<I> produceTasks() throws Exception;
 
@@ -38,7 +38,7 @@ public abstract class AbstractExecutorWrapper<I,O> implements ExecutorWrapper<I,
     protected abstract O checkResult() throws Exception;
 
     @Override
-    public O execute(BlockingQueue<I> taskPoolQueue) {
+    public O execute(BlockingQueue<I> taskPoolQueue) throws Exception{
         this.taskPoolQueue = taskPoolQueue;
         return doExecute();
     }

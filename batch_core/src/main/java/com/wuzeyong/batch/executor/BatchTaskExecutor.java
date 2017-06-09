@@ -1,6 +1,7 @@
 package com.wuzeyong.batch.executor;
 
 import com.wuzeyong.batch.constant.BatchCoreConstant;
+import com.wuzeyong.batch.wrapper.CommExecutorWrapper;
 import com.wuzeyong.batch.wrapper.ConsumerExecutorWrapper;
 import com.wuzeyong.batch.wrapper.ExecutorManager;
 import com.wuzeyong.batch.wrapper.ProducerExecutorWrapper;
@@ -25,44 +26,71 @@ public final class BatchTaskExecutor implements TaskExecutor{
 
     protected Collection<ConsumerExecutorWrapper> consumerExecutorWrappers;
 
+    protected Collection<CommExecutorWrapper> commExecutorWrappers;
+
     protected FutureTask<String> producersTask;
 
     protected FutureTask<String> consumersTask;
+
+    protected FutureTask<String> commTask;
 
     protected ManageProducersCallable producersCallable;
 
     protected ManageConsumersCallable consumersCallable;
 
+    protected ManageCommCallable manageCommCallable;
+
     protected Thread producersManagerThread;
 
     protected Thread consumersManagerThread;
+
+    protected Thread commManagerThread;
 
     protected int queueSize = 100;
 
     protected BlockingQueue<BaseTask> taskPoolQueue;
 
+    protected String pcMode;
+
+    public  BatchTaskExecutor(ExecutorEngine executorEngine, Collection<CommExecutorWrapper> commExecutorWrappers,
+                              String pcMode) {
+        this.executorEngine = executorEngine;
+        this.commExecutorWrappers = commExecutorWrappers;
+        this.pcMode = pcMode;
+    }
+
     public  BatchTaskExecutor(ExecutorEngine executorEngine, Collection<ProducerExecutorWrapper> producerExecutorWrappers,
-                              Collection<ConsumerExecutorWrapper> consumerExecutorWrappers) {
+                              Collection<ConsumerExecutorWrapper> consumerExecutorWrappers,String pcMode) {
         this.executorEngine = executorEngine;
         this.producerExecutorWrappers = producerExecutorWrappers;
         this.consumerExecutorWrappers = consumerExecutorWrappers;
+        this.pcMode = pcMode;
     }
 
     public void start(){
-        if(taskPoolQueue == null){
-            LOGGER.info("Create Task Pool Queue of size {}",queueSize);
-            taskPoolQueue = new ArrayBlockingQueue<BaseTask>(queueSize);
+        if(BatchCoreConstant.Y.equals(pcMode)){
+            if(taskPoolQueue == null){
+                LOGGER.info("Create Task Pool Queue of size {}",queueSize);
+                taskPoolQueue = new ArrayBlockingQueue<BaseTask>(queueSize);
+            }
+            if(producersCallable == null){
+                producersCallable = new ManageProducersCallable(this,producerExecutorWrappers,taskPoolQueue);
+            }
+            if(consumersCallable == null){
+                consumersCallable = new ManageConsumersCallable(this,consumerExecutorWrappers,taskPoolQueue);
+            }
+            startAsyncPCManageThread();
+        }else {
+            if(manageCommCallable == null){
+                manageCommCallable = new ManageCommCallable(this,commExecutorWrappers);
+            }
+            startAsyncCommManageThread();
         }
-        if(producersCallable == null){
-            producersCallable = new ManageProducersCallable(this,producerExecutorWrappers,taskPoolQueue);
-        }
-        if(consumersCallable == null){
-            consumersCallable = new ManageConsumersCallable(this,consumerExecutorWrappers,taskPoolQueue);
-        }
-        startAsyncManageThread();
+
+
     }
 
-    protected void startAsyncManageThread(){
+    protected void startAsyncPCManageThread(){
         if(producersTask == null){
             producersTask = new FutureTask<String>(producersCallable);
             producersManagerThread = new Thread(producersTask);
@@ -74,6 +102,14 @@ public final class BatchTaskExecutor implements TaskExecutor{
             consumersManagerThread = new Thread(consumersTask);
         }
         consumersManagerThread.start();
+    }
+
+    protected void startAsyncCommManageThread(){
+        if(commTask == null){
+            commTask = new FutureTask<String>(manageCommCallable);
+            commManagerThread = new Thread(commTask);
+        }
+        commManagerThread.start();
     }
 
     protected void stopAsyncManageThread(){
@@ -109,21 +145,35 @@ public final class BatchTaskExecutor implements TaskExecutor{
     }
 
     private String getExecuteStatus() {
-        String producersExecuteStatus = BatchCoreConstant.EXECUTE_STATUS_UNEXECUTE;
-        String consumersExecuteStatus = BatchCoreConstant.EXECUTE_STATUS_UNEXECUTE;
-        try{
-            producersExecuteStatus = producersTask.get();
-        }catch (Exception e){
-            LOGGER.warn("Interrupted while waiting for the producers task return execute status",e);
-        }
-        try{
-            consumersExecuteStatus = consumersTask.get();
-        }catch (Exception e){
-            LOGGER.warn("Interrupted while waiting for the consumers task return execute status",e);
-        }
-        if(BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL.equals(producersExecuteStatus)
-                && BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL.equals(consumersExecuteStatus)){
-            return BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL;
+        if(BatchCoreConstant.Y.equals(pcMode)){
+            String producersExecuteStatus = BatchCoreConstant.EXECUTE_STATUS_UNEXECUTE;
+            String consumersExecuteStatus = BatchCoreConstant.EXECUTE_STATUS_UNEXECUTE;
+            try{
+                producersExecuteStatus = producersTask.get();
+            }catch (Exception e){
+                LOGGER.warn("Interrupted while waiting for the producers task return execute status",e);
+            }
+            try{
+                consumersExecuteStatus = consumersTask.get();
+            }catch (Exception e){
+                LOGGER.warn("Interrupted while waiting for the consumers task return execute status",e);
+            }
+            if(BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL.equals(producersExecuteStatus)
+                    && BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL.equals(consumersExecuteStatus)){
+                return BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL;
+            }
+        }else {
+            String commExecuteStatus = BatchCoreConstant.EXECUTE_STATUS_UNEXECUTE;
+            try{
+                commExecuteStatus = commTask.get();
+            }catch (Exception e){
+                LOGGER.warn("Interrupted while waiting for the comm task return execute status",e);
+
+            }
+            if(BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL.equals(commExecuteStatus)){
+                return BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL;
+            }
+
         }
         shutdown();
         return BatchCoreConstant.EXECUTE_STATUS_UNEXECUTE;

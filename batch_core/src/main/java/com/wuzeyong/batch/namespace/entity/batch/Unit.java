@@ -3,6 +3,7 @@ package com.wuzeyong.batch.namespace.entity.batch;
 import com.wuzeyong.batch.ExecuteContext;
 import com.wuzeyong.batch.constant.BatchCoreConstant;
 import com.wuzeyong.batch.executor.BatchTaskExecutor;
+import com.wuzeyong.batch.wrapper.CommExecutorWrapper;
 import com.wuzeyong.batch.wrapper.ConsumerExecutorWrapper;
 import com.wuzeyong.batch.wrapper.ProducerExecutorWrapper;
 import lombok.Getter;
@@ -26,6 +27,8 @@ public class Unit {
     private String describe;
 
     private String allowManualExecute;
+
+    private String pcMode;
 
     private Properties props;
 
@@ -54,18 +57,37 @@ public class Unit {
     }
 
     public String execute(){
-        return new BatchTaskExecutor(executeContext.getExecutorEngine(),routeProducer(),getConsumer()).execute();
+        return BatchCoreConstant.Y.equals(pcMode)?
+                new BatchTaskExecutor(executeContext.getExecutorEngine(),loadProducerWrapper(),loadConsumerWrapper(),pcMode).execute():
+                new BatchTaskExecutor(executeContext.getExecutorEngine(),loadCommWrapper(),pcMode).execute();
+    }
+
+
+    private List<CommExecutorWrapper> loadCommWrapper() {
+        String serverId = System.getProperty("batch.server.id");
+        List<CommExecutorWrapper> commExecutorWrappers = new ArrayList<CommExecutorWrapper>();
+        for(PageNode pageNode : pageNodes){
+            if(pageNode.getServerId().equals(serverId)){
+                CommExecutorWrapper commExecutorWrapper = new CommExecutorWrapper();
+                commExecutorWrapper.setBatchUnit(batchUnit);
+                commExecutorWrapper.setPageNode(pageNode);
+                commExecutorWrapper.setExecutorType(BatchCoreConstant.EXECUTOR_TYPE_COMM);
+                commExecutorWrapper.setDataSource(pageNode.getDataSource());
+                commExecutorWrappers.add(commExecutorWrapper);
+            }
+        }
+        return commExecutorWrappers;
     }
 
     /**
      * 直接根据配置获得消费者的执行数量
      * @return
      */
-    private List<ConsumerExecutorWrapper> getConsumer() {
+    private List<ConsumerExecutorWrapper> loadConsumerWrapper() {
         //TODO 怎么确定消费者的执行数量
-        List<ProducerExecutorWrapper> producerExecutorWrappers = routeProducer();
+        List<ProducerExecutorWrapper> producerExecutorWrappers = loadProducerWrapper();
         List<ConsumerExecutorWrapper> consumerExecutorWrappers = new ArrayList<ConsumerExecutorWrapper>(6);
-        for(int i = 0 ; i < producerExecutorWrappers.size() ;i++){
+        for(int i = 0 ; i < 6 ;i++){
             ConsumerExecutorWrapper consumerExecutorWrapper = new ConsumerExecutorWrapper();
             consumerExecutorWrapper.setBatchUnit(batchUnit);
             consumerExecutorWrapper.setExecutorType(BatchCoreConstant.EXECUTOR_TYPE_CONSUMER);
@@ -78,7 +100,7 @@ public class Unit {
      * 根据分页策略中的机器策略，获得生产者的执行
      * @return
      */
-    private List<ProducerExecutorWrapper> routeProducer() {
+    private List<ProducerExecutorWrapper> loadProducerWrapper() {
         String serverId = System.getProperty("batch.server.id");
         List<ProducerExecutorWrapper> producerExecutorWrappers = new ArrayList<ProducerExecutorWrapper>();
         for(PageNode pageNode : pageNodes){

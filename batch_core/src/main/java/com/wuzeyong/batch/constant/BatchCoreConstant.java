@@ -13,11 +13,17 @@ public class BatchCoreConstant {
 
     public final static String EXECUTOR_TYPE_CONSUMER="consumer";
 
+    public final static String EXECUTOR_TYPE_COMM="comm";
+
     public final static String EXECUTOR_STATUS_START="start";
 
     public final static String EXECUTOR_STATUS_ERROR="error";
 
     public final static String EXECUTOR_STATUS_END="end";
+
+    public final static String Y="Y";
+
+    public final static String N="N";
 
 
 }

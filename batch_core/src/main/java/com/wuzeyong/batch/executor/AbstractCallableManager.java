@@ -19,6 +19,12 @@ public abstract class AbstractCallableManager<I,O> {
 
     protected List<Thread> producerThreads = new CopyOnWriteArrayList<Thread>();
     protected List<Thread> consumerThreads = new CopyOnWriteArrayList<Thread>();
+    protected List<Thread> commThread = new CopyOnWriteArrayList<Thread>();
+
+
+    public AbstractCallableManager(TaskExecutor taskExecutor) {
+        this(taskExecutor,null);
+    }
 
     public AbstractCallableManager(TaskExecutor taskExecutor,BlockingQueue<I> taskPoolQueue) {
         this.taskExecutor = taskExecutor;
@@ -31,6 +37,9 @@ public abstract class AbstractCallableManager<I,O> {
         }
         if(BatchCoreConstant.EXECUTOR_TYPE_CONSUMER.equals(executorWrapper.getExecutorType())){
             consumerThreads.add(Thread.currentThread());
+        }
+        if(BatchCoreConstant.EXECUTOR_TYPE_COMM.equals(executorWrapper.getExecutorType())){
+            commThread.add(Thread.currentThread());
         }
         ExecutorExceptionHandler.setExceptionThrown(isExceptionThrown);
         ExecutorDataMap.setDataMap(dataMap);

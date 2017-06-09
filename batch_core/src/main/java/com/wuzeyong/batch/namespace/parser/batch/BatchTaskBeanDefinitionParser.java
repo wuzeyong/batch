@@ -86,6 +86,7 @@ public class BatchTaskBeanDefinitionParser extends AbstractBeanDefinitionParser 
             unitFactory.addPropertyValue("describe",unitElement.getAttribute(BatchTaskBeanDefinitionParserTag.DESCRIBE_TAG));
             unitFactory.addPropertyValue("allowManualExecute", unitElement.getAttribute(BatchTaskBeanDefinitionParserTag.ALLOW_MANUAL_EXECUTE_TAG));
             unitFactory.addPropertyValue("executeClass", unitElement.getAttribute(BatchTaskBeanDefinitionParserTag.EXECUTE_CLASS_TAG));
+            unitFactory.addPropertyValue("pcMode",unitElement.getAttribute(BatchTaskBeanDefinitionParserTag.PRODUCER_CONSUMER_TAG));
             String pagingStrategy = unitElement.getAttribute(BatchTaskBeanDefinitionParserTag.PAGING_STRATEGY_TAG);
             if(!Strings.isNullOrEmpty(pagingStrategy)){
                 unitFactory.addPropertyReference("pagingStrategy", pagingStrategy);

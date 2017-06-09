@@ -19,6 +19,8 @@ public final class BatchTaskBeanDefinitionParserTag {
 
     public static final String ENABLE_TAG = "enable";
 
+    public static final String PRODUCER_CONSUMER_TAG = "pcMode";
+
     public static final String DATASOURCE_TAG = "dataSource";
 
     public static final String TARGETS_TAG = "targets";

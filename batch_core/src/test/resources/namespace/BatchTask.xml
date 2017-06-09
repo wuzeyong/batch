@@ -29,7 +29,7 @@
         </batch:machine-strategies>
     </batch:paging-strategy>
 
-    <batch:task id="batchTask" name="平安银行日终批量程序" describe="平安银行日终批量程序">
+    <batch:task id="batchTask" name="批量程序" describe="批量程序">
         <batch:props>
             <prop key="testBatchTask-property-1">testBatchTask-property-1</prop>
             <prop key="testBatchTask-property2">testBatchTask-property-2</prop>
@@ -37,16 +37,16 @@
         <batch:targets>
             <batch:target id="testTarget1" name="测试目标1" describe="测试目标1"  enable="true">
                 <batch:units>
-                    <batch:unit id="testUnit1" name="测试执行单元1" describe="测试执行单元1" executeClass="testUnit1" paging-strategy="testStrategy1"/>
+                    <batch:unit id="testUnit1" name="测试执行单元1" describe="测试执行单元1" executeClass="testUnit1" paging-strategy="testStrategy1" />
 
-                    <batch:unit id="testUnit2" name="测试执行单元2" describe="测试执行单元2" executeClass="testUnit2" paging-strategy="testStrategy2">
+                    <batch:unit id="testUnit2" name="测试执行单元2" describe="测试执行单元2" executeClass="testUnit2" paging-strategy="testStrategy2" pcMode="Y">
                         <batch:props >
                             <prop key="testUnit2-property-1">testUnit2-property-1</prop>
                             <prop key="testUnit2-property-2">testUnit2-property-2</prop>
                         </batch:props>
                     </batch:unit>
 
-                    <batch:unit id="testUnit3" name="测试执行单元3" describe="测试执行单元3" executeClass="testUnit3" paging-strategy="testStrategy1"></batch:unit>
+                    <batch:unit id="testUnit3" name="测试执行单元3" describe="测试执行单元3" executeClass="testUnit3" paging-strategy="testStrategy2" ></batch:unit>
 
                 </batch:units>
 
