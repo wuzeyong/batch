@@ -1,7 +1,7 @@
 package com.wuzeyong.batch.exception;
 
 /**
- * @author WUZEYONG089
+ * @author WUZEYONG
  */
 public class BatchException extends RuntimeException {
 

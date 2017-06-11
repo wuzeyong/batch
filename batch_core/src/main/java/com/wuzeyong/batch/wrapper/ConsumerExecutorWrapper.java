@@ -7,7 +7,7 @@ import com.wuzeyong.batch.result.BaseResult;
 import com.wuzeyong.batch.result.ConsumerBaseResult;
 
 /**
- * Created by WUZEYONG089 on 2017/5/3.
+ * @author WUZEYONG
  */
 public class ConsumerExecutorWrapper extends AbstractConsumerExecutorWrapper<BaseTask,BaseResult>{
 

@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * 轮询任务单元
- * Created by WUZEYONG089 on 2017/4/27.
+ * @author WUZEYONG
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

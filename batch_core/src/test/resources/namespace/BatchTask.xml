@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:batch="http://www.wuzeyong.com/schema/batch"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-		http://www.wuzeyong.com/schema/batch http://www.wuzeyong.com/schema/batch.xsd">
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:batch="http://www.wuzeyong.com/schema/batch"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.wuzeyong.com/schema/batch http://www.wuzeyong.com/schema/batch.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <context:component-scan base-package="com.wuzeyong.batch"></context:component-scan>
 
     <bean class="com.wuzeyong.batch.utils.SpringContextUtils" />
 
-    <bean id="testUnit1" class="com.wuzeyong.batch.extra.TestUnit1"/>
-    <bean id="testUnit2" class="com.wuzeyong.batch.extra.TestUnit2"/>
-    <bean id="testUnit3" class="com.wuzeyong.batch.extra.TestUnit3"/>
+    <!--<bean id="myUnit1" class="com.wuzeyong.batch.unit.MyUnit1"/>-->
+    <!--<bean id="myUnit2" class="com.wuzeyong.batch.unit.MyUnit2"/>-->
+    <!--<bean id="myUnit3" class="com.wuzeyong.batch.unit.MyUnit3"/>-->
 
 
     <!-- 单机批量策略 -->
@@ -37,16 +41,16 @@
         <batch:targets>
             <batch:target id="testTarget1" name="测试目标1" describe="测试目标1"  enable="true">
                 <batch:units>
-                    <batch:unit id="testUnit1" name="测试执行单元1" describe="测试执行单元1" executeClass="testUnit1" paging-strategy="testStrategy1" />
+                    <batch:unit id="testUnit1" name="测试执行单元1" describe="测试执行单元1" executeClass="myUnit1" paging-strategy="testStrategy1" />
 
-                    <batch:unit id="testUnit2" name="测试执行单元2" describe="测试执行单元2" executeClass="testUnit2" paging-strategy="testStrategy2" pcMode="Y">
+                    <batch:unit id="testUnit2" name="测试执行单元2" describe="测试执行单元2" executeClass="myUnit2" paging-strategy="testStrategy2" pcMode="Y">
                         <batch:props >
                             <prop key="testUnit2-property-1">testUnit2-property-1</prop>
                             <prop key="testUnit2-property-2">testUnit2-property-2</prop>
                         </batch:props>
                     </batch:unit>
 
-                    <batch:unit id="testUnit3" name="测试执行单元3" describe="测试执行单元3" executeClass="testUnit3" paging-strategy="testStrategy2" ></batch:unit>
+                    <batch:unit id="testUnit3" name="测试执行单元3" describe="测试执行单元3" executeClass="myUnit3" paging-strategy="testStrategy2" ></batch:unit>
 
                 </batch:units>
 

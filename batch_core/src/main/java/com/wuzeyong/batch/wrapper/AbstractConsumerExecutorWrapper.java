@@ -3,19 +3,17 @@ package com.wuzeyong.batch.wrapper;
 
 import com.wuzeyong.batch.constant.BatchCoreConstant;
 import com.wuzeyong.batch.executor.ExecutorExceptionHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.wuzeyong.batch.namespace.entity.batch.TaskSet;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by WUZEYONG089 on 2017/5/3.
+ * @author WUZEYONG
  */
+@Slf4j
 public abstract class AbstractConsumerExecutorWrapper<I,O> extends AbstractExecutorWrapper<I,O>{
-
-    private static Logger LOGGER = LoggerFactory.getLogger(AbstractConsumerExecutorWrapper.class);
 
     @Override
     protected O doExecute() {
@@ -31,8 +29,8 @@ public abstract class AbstractConsumerExecutorWrapper<I,O> extends AbstractExecu
                     task = this.taskPoolQueue.poll(1000, TimeUnit.MICROSECONDS);
                 }
                 //任务处理失败
-                if(LOGGER.isTraceEnabled()){
-                    LOGGER.trace("Consumer Of Unit[{}] in Thread[{}] consume task from TaskPoolQueue:{}",
+                if(log.isTraceEnabled()){
+                    log.trace("Consumer Of Unit[{}] in Thread[{}] consume task from TaskPoolQueue:{}",
                             this.batchUnit.getClass().getSimpleName(),Thread.currentThread().getName(),task);
                 }
                 if(task!=null && !consumeTask(task)){
@@ -42,7 +40,7 @@ public abstract class AbstractConsumerExecutorWrapper<I,O> extends AbstractExecu
             O result = checkResult();
             return result;
         } catch (InterruptedException e) {
-            LOGGER.error("Thread[{}] of producers is Interrupted:{}", Thread.currentThread().getId(), e);
+            log.error("Thread[{}] of producers is Interrupted:{}", Thread.currentThread().getId(), e);
             //TODO 处理任务线程中断，需通知线程池重新启动线程
         } catch (Exception e){
             ExecutorExceptionHandler.handleException(e);
@@ -53,8 +51,13 @@ public abstract class AbstractConsumerExecutorWrapper<I,O> extends AbstractExecu
     protected abstract void handleFailedTask(I task);
 
     @Override
-    protected List<I> produceTasks() throws Exception {
+    protected TaskSet<I> produceTask() throws Exception {
         throw new IllegalAccessException("Consumer don't need to produce tasks!");
+    }
+
+    @Override
+    protected I decorateTask(TaskSet<I> taskSet) throws Exception {
+        throw new IllegalAccessException("Consumer don't need to decorate task!");
     }
 
     protected boolean allProducerThreadsIsOver(){

@@ -9,7 +9,7 @@ import lombok.Getter;
 import java.util.Properties;
 
 /**
- * @author WUZEYONG089
+ * @author WUZEYONG
  */
 @Getter
 public class BatchTask {

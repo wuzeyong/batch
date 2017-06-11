@@ -7,7 +7,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 /**
  * Spring命名空间处理器.
  *
- * @author WUZEYONG089
+ * @author WUZEYONG
  */
 public final class BatchTaskNamespaceHandler extends NamespaceHandlerSupport {
 

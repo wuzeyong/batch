@@ -3,21 +3,19 @@ package com.wuzeyong.batch.wrapper;
 
 import com.wuzeyong.batch.namespace.entity.batch.BatchUnit;
 import com.wuzeyong.batch.namespace.entity.batch.PageNode;
+import com.wuzeyong.batch.namespace.entity.batch.TaskSet;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.sql.DataSource;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * Created by WUZEYONG089 on 2017/5/3.
+ * @author WUZEYONG
  */
+@Slf4j
 @Setter
 public abstract class AbstractExecutorWrapper<I,O> implements ExecutorWrapper<I,O>{
-
-    private static Logger LOGGER = LoggerFactory.getLogger(AbstractExecutorWrapper.class);
 
     protected String executorType;
 
@@ -31,7 +29,9 @@ public abstract class AbstractExecutorWrapper<I,O> implements ExecutorWrapper<I,
 
     protected abstract O doExecute() throws Exception;
 
-    protected abstract List<I> produceTasks() throws Exception;
+    protected abstract TaskSet<I> produceTask() throws Exception;
+
+    protected abstract I decorateTask(TaskSet<I> taskSet) throws Exception;
 
     protected abstract boolean consumeTask(I task) throws Exception;
 

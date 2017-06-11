@@ -3,8 +3,7 @@ package com.wuzeyong.batch.executor;
 import com.wuzeyong.batch.constant.BatchCoreConstant;
 import com.wuzeyong.batch.result.BaseResult;
 import com.wuzeyong.batch.wrapper.CommExecutorWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,12 +11,10 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
- * Created by WUZEYONG089 on 2017/5/19.
+ * @author WUZEYONG
  */
+@Slf4j
 public class ManageCommCallable extends AbstractCallableManager<BaseTask,BaseResult> implements Callable<String>{
-
-    private static Logger LOGGER = LoggerFactory.getLogger(ManageCommCallable.class);
-
 
     protected Collection<CommExecutorWrapper> commExecutorWrappers;
 
@@ -50,7 +47,7 @@ public class ManageCommCallable extends AbstractCallableManager<BaseTask,BaseRes
                 else return BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL;
             }
         });
-        LOGGER.info("[{}] Comm Threads Handle Tasks without PcMode!",commThread.size());
+        log.info("[{}] Comm Threads Handle Tasks without PcMode!",commThread.size());
         commThread.clear();
         return BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL;
     }

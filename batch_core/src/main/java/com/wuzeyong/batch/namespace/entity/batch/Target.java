@@ -4,22 +4,21 @@ import com.wuzeyong.batch.ExecuteContext;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author WUZEYONG089
+ * @author WUZEYONG
  */
+@Slf4j
 @NoArgsConstructor
 @Getter
 @Setter
 public class Target   {
-
-    private static Logger LOGGER = LoggerFactory.getLogger(Target.class);
 
     private String id;
 
@@ -52,7 +51,7 @@ public class Target   {
     public void execute(){
         currentUnit = getRootUnit();
         if(currentUnit == null){
-            LOGGER.error("目标：{}的根单元没有在路由表中定义！",getId());
+            log.error("目标：{}的根单元没有在路由表中定义！",getId());
         }else {
             while(currentUnit != null){
                 currentUnit.setExecuteContext(executeContext);

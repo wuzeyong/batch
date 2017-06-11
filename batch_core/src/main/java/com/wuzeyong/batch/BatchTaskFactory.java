@@ -9,7 +9,7 @@ import java.util.Properties;
 /**
  * 批量任务工厂.
  * 
- * @author WUZEYONG089
+ * @author WUZEYONG
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BatchTaskFactory {

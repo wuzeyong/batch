@@ -8,7 +8,7 @@ import java.util.List;
  * @param <I> 入参类型
  * @param <O> 出参类型
  *
- * @author WUZEYONG089
+ * @author WUZEYONG
  */
 interface MergeUnit<I, O> {
     

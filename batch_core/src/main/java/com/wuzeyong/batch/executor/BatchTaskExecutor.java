@@ -5,8 +5,7 @@ import com.wuzeyong.batch.wrapper.CommExecutorWrapper;
 import com.wuzeyong.batch.wrapper.ConsumerExecutorWrapper;
 import com.wuzeyong.batch.wrapper.ExecutorManager;
 import com.wuzeyong.batch.wrapper.ProducerExecutorWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -14,11 +13,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.FutureTask;
 
 /**
- * @author WUZEYONG089
+ * @author WUZEYONG
  */
+@Slf4j
 public final class BatchTaskExecutor implements TaskExecutor{
-
-    private static Logger LOGGER = LoggerFactory.getLogger(BatchTaskExecutor.class);
 
     protected ExecutorEngine executorEngine;
 
@@ -70,7 +68,7 @@ public final class BatchTaskExecutor implements TaskExecutor{
     public void start(){
         if(BatchCoreConstant.Y.equals(pcMode)){
             if(taskPoolQueue == null){
-                LOGGER.info("Create Task Pool Queue of size {}",queueSize);
+                log.info("Create Task Pool Queue of size {}",queueSize);
                 taskPoolQueue = new ArrayBlockingQueue<BaseTask>(queueSize);
             }
             if(producersCallable == null){
@@ -116,12 +114,12 @@ public final class BatchTaskExecutor implements TaskExecutor{
         try {
             producersManagerThread.join();
         } catch (InterruptedException e) {
-            LOGGER.error(" producers thread is interrupted",e);
+            log.error(" producers thread is interrupted",e);
         }
         try {
             consumersManagerThread.join();
         } catch (InterruptedException e) {
-            LOGGER.error("consumers thread is interrupted", e);
+            log.error("consumers thread is interrupted", e);
         }
         producersTask = null;
         consumersTask = null;
@@ -151,12 +149,12 @@ public final class BatchTaskExecutor implements TaskExecutor{
             try{
                 producersExecuteStatus = producersTask.get();
             }catch (Exception e){
-                LOGGER.warn("Interrupted while waiting for the producers task return execute status",e);
+                log.warn("Interrupted while waiting for the producers task return execute status",e);
             }
             try{
                 consumersExecuteStatus = consumersTask.get();
             }catch (Exception e){
-                LOGGER.warn("Interrupted while waiting for the consumers task return execute status",e);
+                log.warn("Interrupted while waiting for the consumers task return execute status",e);
             }
             if(BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL.equals(producersExecuteStatus)
                     && BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL.equals(consumersExecuteStatus)){
@@ -167,7 +165,7 @@ public final class BatchTaskExecutor implements TaskExecutor{
             try{
                 commExecuteStatus = commTask.get();
             }catch (Exception e){
-                LOGGER.warn("Interrupted while waiting for the comm task return execute status",e);
+                log.warn("Interrupted while waiting for the comm task return execute status",e);
 
             }
             if(BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL.equals(commExecuteStatus)){

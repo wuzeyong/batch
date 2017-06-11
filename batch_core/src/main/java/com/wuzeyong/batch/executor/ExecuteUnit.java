@@ -6,7 +6,7 @@ package com.wuzeyong.batch.executor;
  * @param <I> 入参类型
  * @param <O> 出参类型
  *
- * @author WUZEYONG089
+ * @author WUZEYONG
  */
 public interface ExecuteUnit<I, O> {
     

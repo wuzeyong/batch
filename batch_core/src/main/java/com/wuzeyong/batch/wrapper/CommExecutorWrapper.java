@@ -1,22 +1,26 @@
 package com.wuzeyong.batch.wrapper;
 
-
 import com.wuzeyong.batch.constant.BatchCoreConstant;
 import com.wuzeyong.batch.executor.BaseTask;
+import com.wuzeyong.batch.namespace.entity.batch.TaskSet;
 import com.wuzeyong.batch.result.BaseResult;
-import com.wuzeyong.batch.result.ProducerBaseResult;
-
-import java.util.List;
+import com.wuzeyong.batch.result.CommBaseResult;
 
 /**
- * Created by WUZEYONG089 on 2017/5/3.
+ * @author WUZEYONG
  */
 
 public class CommExecutorWrapper extends AbstractCommExecutorWrapper<BaseTask,BaseResult>{
 
+
     @Override
-    protected List<BaseTask> produceTasks() throws Exception {
-        return this.batchUnit.produceTasks();
+    protected TaskSet<BaseTask> produceTask() throws Exception {
+        return this.batchUnit.produceTask();
+    }
+
+    @Override
+    protected BaseTask decorateTask(TaskSet<BaseTask> taskSet) throws Exception {
+        return this.batchUnit.decorateTask(taskSet);
     }
 
     @Override
@@ -26,9 +30,9 @@ public class CommExecutorWrapper extends AbstractCommExecutorWrapper<BaseTask,Ba
 
     @Override
     protected BaseResult checkResult() throws Exception {
-        ProducerBaseResult producerBaseResult = new ProducerBaseResult();
-        producerBaseResult.setExecuteStatus(BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL);
-        return producerBaseResult;
+        CommBaseResult commBaseResult = new CommBaseResult();
+        commBaseResult.setExecuteStatus(BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL);
+        return commBaseResult;
     }
 
     @Override

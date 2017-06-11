@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * 批量的配置属性.
  *
- * @author WUZEYONG089
+ * @author WUZEYONG
  */
 public class ExtendProperties {
 

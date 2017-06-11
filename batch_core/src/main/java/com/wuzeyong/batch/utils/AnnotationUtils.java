@@ -1,8 +1,7 @@
 package com.wuzeyong.batch.utils;
 
 import com.wuzeyong.batch.namespace.entity.batch.BatchUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -10,11 +9,10 @@ import java.util.*;
 
 /**
  * 
- * Created by WUZEYONG089 on 2016/9/01.
+ * @author WUZEYONG
  */
+@Slf4j
 public class AnnotationUtils {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AnnotationUtils.class);
 
     /**
      * 获取targetClazz类中，所有拥有annotationClazz注解的字段
@@ -45,8 +43,10 @@ public class AnnotationUtils {
         List<BatchUnit> batchUnits = new ArrayList<BatchUnit>();
         Map<String,Object> instances = SpringContextUtils.getClassInstance(annotationClazz);
         for (Map.Entry<String,Object> instance : instances.entrySet()){
-            LOGGER.info("annotationClazz:{}, key:{}",annotationClazz.toString(), instance.getKey());
-            LOGGER.info("annotationClazz:{}, value:{}",annotationClazz.toString(), instance.getValue().toString());
+            if(log.isDebugEnabled()){
+                log.debug("annotationClazz:{}, key:{}", annotationClazz.toString(), instance.getKey());
+                log.debug("annotationClazz:{}, value:{}",annotationClazz.toString(), instance.getValue().toString());
+            }
             BatchUnit batchUnit = (BatchUnit)instance.getValue();
             batchUnits.add(batchUnit);
         }

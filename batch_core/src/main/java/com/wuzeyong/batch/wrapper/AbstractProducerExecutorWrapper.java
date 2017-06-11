@@ -3,34 +3,31 @@ package com.wuzeyong.batch.wrapper;
 
 import com.wuzeyong.batch.constant.BatchCoreConstant;
 import com.wuzeyong.batch.executor.ExecutorExceptionHandler;
+import com.wuzeyong.batch.namespace.entity.batch.TaskSet;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * Created by WUZEYONG089 on 2017/5/3.
+ * @author WUZEYONG
  */
+@Slf4j
 @Setter
 public abstract class AbstractProducerExecutorWrapper<I,O> extends AbstractExecutorWrapper<I,O>{
-
-    private static Logger LOGGER = LoggerFactory.getLogger(AbstractExecutorWrapper.class);
 
     @Override
     protected O doExecute() {
         try {
             ExecutorManager.setProducerStatus(Thread.currentThread(), BatchCoreConstant.EXECUTOR_STATUS_START);
-            List<I> tasks = produceTasks();
-            for(I task : tasks){
-                //当队列满时，自旋等待
+            TaskSet<I> taskSet = produceTask();
+            while(taskSet.next()){
+                I task = decorateTask(taskSet);
                 boolean offerResult = taskPoolQueue.offer(task);
                 while(!offerResult){
                     offerResult = taskPoolQueue.offer(task);
                     if(!offerResult) Thread.sleep(500);
                 }
-                if(LOGGER.isTraceEnabled()){
-                    LOGGER.trace("Producer Of Unit[{}] in Thread[{}] put task to TaskPoolQueue:{}",
+                if(log.isTraceEnabled()){
+                    log.trace("Producer Of Unit[{}] in Thread[{}] put task to TaskPoolQueue:{}",
                             this.batchUnit.getClass().getSimpleName(),Thread.currentThread().getName(),task);
                 }
             }
@@ -38,7 +35,7 @@ public abstract class AbstractProducerExecutorWrapper<I,O> extends AbstractExecu
             ExecutorManager.setProducerStatus(Thread.currentThread(), BatchCoreConstant.EXECUTOR_STATUS_END);
             return result;
         } catch (InterruptedException e) {
-            LOGGER.error("Thread[{}] of producers is Interrupted:{}", Thread.currentThread().getId(), e);
+            log.error("Thread[{}] of producers is Interrupted:{}", Thread.currentThread().getId(), e);
             //TODO 处理任务线程中断，需通知线程池重新启动线程
             return null;
         } catch (Exception e){

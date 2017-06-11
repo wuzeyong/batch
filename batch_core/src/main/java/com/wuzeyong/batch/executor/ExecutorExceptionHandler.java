@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 执行器执行时异常处理类.
  *
- * @author WUZEYONG089
+ * @author WUZEYONG
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Slf4j

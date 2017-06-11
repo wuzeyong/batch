@@ -9,7 +9,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Created by WUZEYONG089 on 2017/5/19.
+ * @author WUZEYONG
  */
 public abstract class AbstractCallableManager<I,O> {
 

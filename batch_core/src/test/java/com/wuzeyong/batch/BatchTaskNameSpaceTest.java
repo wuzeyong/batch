@@ -1,8 +1,6 @@
 package com.wuzeyong.batch;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
@@ -18,8 +16,6 @@ import javax.annotation.Resource;
 @TestExecutionListeners(inheritListeners = false, listeners =
         {DependencyInjectionTestExecutionListener.class, DirtiesContextTestExecutionListener.class})
 public class BatchTaskNameSpaceTest  extends AbstractJUnit4SpringContextTests {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(BatchTaskNameSpaceTest.class);
 
     @Resource
     private SpringBatchTask batchTask;

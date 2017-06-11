@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 /**
  * 解析标签.
  *
- * @author WUZEYONG089
+ * @author WUZEYONG
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BatchTaskBeanDefinitionParserTag {

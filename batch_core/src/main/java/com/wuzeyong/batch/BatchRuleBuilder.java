@@ -12,8 +12,7 @@ import com.wuzeyong.batch.namespace.entity.config.*;
 import com.wuzeyong.batch.utils.AnnotationUtils;
 import com.wuzeyong.batch.utils.DataConvertUtil;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
@@ -22,12 +21,11 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by WUZEYONG089 on 2017/5/4.
+ * @author WUZEYONG
  */
+@Slf4j
 @AllArgsConstructor
 public class BatchRuleBuilder {
-
-    private static Logger LOGGER = LoggerFactory.getLogger(BatchRuleBuilder.class);
 
     private final TaskConfig taskConfig;
 

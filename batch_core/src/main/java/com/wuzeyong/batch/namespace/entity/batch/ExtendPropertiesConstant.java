@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * 配置项常量.
- * @author WUZEYONG089
+ * @author WUZEYONG
  */
 @RequiredArgsConstructor
 @Getter

@@ -3,8 +3,7 @@ package com.wuzeyong.batch.executor;
 import com.wuzeyong.batch.constant.BatchCoreConstant;
 import com.wuzeyong.batch.result.BaseResult;
 import com.wuzeyong.batch.wrapper.ConsumerExecutorWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.List;
@@ -13,12 +12,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 
 /**
- * Created by WUZEYONG089 on 2017/5/19.
+ * @author WUZEYONG
  */
+@Slf4j
 public class ManageConsumersCallable extends AbstractCallableManager<BaseTask,BaseResult> implements Callable<String>{
-
-    private static Logger LOGGER = LoggerFactory.getLogger(ManageConsumersCallable.class);
-
 
     protected Collection<ConsumerExecutorWrapper> consumerExecutorWrappers;
 
@@ -53,7 +50,7 @@ public class ManageConsumersCallable extends AbstractCallableManager<BaseTask,Ba
                 else return BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL;
             }
         });
-        LOGGER.info("[{}] Conusumer Threads Handle Tasks with PcMode!",consumerThreads.size());
+        log.info("[{}] Conusumer Threads Handle Tasks with PcMode!",consumerThreads.size());
         consumerThreads.clear();
         return BatchCoreConstant.EXECUTE_STATUS_SUCCESSFUL;
     }

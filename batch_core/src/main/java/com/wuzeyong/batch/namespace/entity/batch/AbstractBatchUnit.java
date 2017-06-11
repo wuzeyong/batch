@@ -1,7 +1,8 @@
 package com.wuzeyong.batch.namespace.entity.batch;
 
+
 /**
- * Created by WUZEYONG089 on 2017/5/4.
+ * @author WUZEYONG
  */
 public abstract class AbstractBatchUnit<I,O> implements BatchUnit<I,O> {
 
@@ -14,4 +15,6 @@ public abstract class AbstractBatchUnit<I,O> implements BatchUnit<I,O> {
     public void handleFailedTask(I task) {
         return;
     }
+
+
 }

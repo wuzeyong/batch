@@ -7,7 +7,7 @@ import java.util.Properties;
 
 /**
  * 基于Spring命名空间的批量任务
- * @author WUZEYONG089
+ * @author WUZEYONG
  */
 public class SpringBatchTask extends BatchTask{
 

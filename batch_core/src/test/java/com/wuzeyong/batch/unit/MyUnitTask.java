@@ -1,4 +1,4 @@
-package com.wuzeyong.batch.extra;
+package com.wuzeyong.batch.unit;
 
 import com.wuzeyong.batch.executor.BaseTask;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class TestUnitTask implements BaseTask {
+public class MyUnitTask implements BaseTask {
     private String str;
 
     private Long aLong;

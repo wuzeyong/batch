@@ -23,7 +23,7 @@ import java.util.Properties;
 /**
  * 基于Spring命名空间的解析器.
  *®
- * @author WUZEYONG089
+ * @author WUZEYONG
  */
 public class BatchTaskBeanDefinitionParser extends AbstractBeanDefinitionParser {
     
