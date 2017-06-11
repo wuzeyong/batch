@@ -7,6 +7,6 @@ public interface FileSet {
 
     boolean next() throws Exception;
 
-    String getStringFile(int index);
+    void close() throws Exception;
 
 }

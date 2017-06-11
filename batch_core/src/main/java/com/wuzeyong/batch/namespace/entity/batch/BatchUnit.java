@@ -1,19 +1,22 @@
 package com.wuzeyong.batch.namespace.entity.batch;
 
 
-
 /**
  * @author WUZEYONG
  */
-public interface BatchUnit<I,O> {
+public interface BatchUnit<I,M,O> {
 
-    public O checkResult() throws Exception;
+    public I produceSet() throws Exception;
 
-    public TaskSet<I> produceTask() throws Exception;
+    public M decorateTask(I set) throws Exception;
 
-    public I decorateTask(TaskSet<I> taskSet);
+    public boolean consumeTask(M task) throws Exception;
 
-    public boolean consumeTask(I task) throws Exception;
+    public O checkCommModeResult();
 
-    public void handleFailedTask(I task);
+    public O checkProducerResult();
+
+    public O checkConsumerResult();
+
+    public void handleFailedTask(M task);
 }

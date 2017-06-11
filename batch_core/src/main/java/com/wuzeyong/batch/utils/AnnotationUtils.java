@@ -41,7 +41,7 @@ public class AnnotationUtils {
      */
     public static List<BatchUnit> getBatchUnitByAnnotation(Class<? extends Annotation> annotationClazz) {
         List<BatchUnit> batchUnits = new ArrayList<BatchUnit>();
-        Map<String,Object> instances = SpringContextUtils.getClassInstance(annotationClazz);
+        Map<String,Object> instances = SpringContextUtils.getBeansWithAnnotation(annotationClazz);
         for (Map.Entry<String,Object> instance : instances.entrySet()){
             if(log.isDebugEnabled()){
                 log.debug("annotationClazz:{}, key:{}", annotationClazz.toString(), instance.getKey());

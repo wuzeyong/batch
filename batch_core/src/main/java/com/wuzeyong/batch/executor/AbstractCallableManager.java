@@ -11,14 +11,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * @author WUZEYONG
  */
-public abstract class AbstractCallableManager<I,O> {
+public abstract class AbstractCallableManager {
 
     protected final TaskExecutor taskExecutor;
 
-    protected BlockingQueue<I> taskPoolQueue;
+    protected BlockingQueue taskPoolQueue;
 
     protected List<Thread> producerThreads = new CopyOnWriteArrayList<Thread>();
+
     protected List<Thread> consumerThreads = new CopyOnWriteArrayList<Thread>();
+
     protected List<Thread> commThread = new CopyOnWriteArrayList<Thread>();
 
 
@@ -26,12 +28,12 @@ public abstract class AbstractCallableManager<I,O> {
         this(taskExecutor,null);
     }
 
-    public AbstractCallableManager(TaskExecutor taskExecutor,BlockingQueue<I> taskPoolQueue) {
+    public AbstractCallableManager(TaskExecutor taskExecutor,BlockingQueue taskPoolQueue) {
         this.taskExecutor = taskExecutor;
         this.taskPoolQueue = taskPoolQueue;
     }
 
-    protected O executeBatchInternal(ExecutorWrapper<I,O> executorWrapper,boolean isExceptionThrown, Map<String, Object> dataMap) {
+    protected <I,M,O> O executeBatchInternal(ExecutorWrapper<I,M,O> executorWrapper,boolean isExceptionThrown, Map<String, Object> dataMap) {
         if(BatchCoreConstant.EXECUTOR_TYPE_PRODUCER.equals(executorWrapper.getExecutorType())){
             producerThreads.add(Thread.currentThread());
         }

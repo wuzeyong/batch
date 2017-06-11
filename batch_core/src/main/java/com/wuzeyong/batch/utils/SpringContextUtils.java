@@ -102,8 +102,20 @@ public class SpringContextUtils implements ApplicationContextAware {
 	 * @param clazz
 	 * @return
 	 */
-	public static Map<String,Object> getClassInstance(Class clazz){
+	public static Map<String,Object> getBeansWithAnnotation(Class clazz){
 		return applicationContext.getBeansWithAnnotation(clazz);
 	}
+
+
+    /**
+     *
+     * 根据注解类clazz，获取bean的实例
+     *
+     * @param clazz
+     * @return
+     */
+    public static <T> Map<String,T> getBeansOfType(Class<T> clazz){
+        return applicationContext.getBeansOfType(clazz);
+    }
 
 }

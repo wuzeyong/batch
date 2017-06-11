@@ -6,13 +6,13 @@ import java.util.concurrent.BlockingQueue;
 /**
  * @author WUZEYONG
  */
-public interface ExecutorWrapper<I,O> {
+public interface ExecutorWrapper<I,M,O> {
 
     public DataSource getDataSource();
 
     public String getExecutorType();
 
-    public O execute(BlockingQueue<I> taskPoolQueue) throws Exception;
+    public O execute(BlockingQueue taskPoolQueue) throws Exception;
 
 
 }

@@ -2,29 +2,27 @@ package com.wuzeyong.batch.wrapper;
 
 
 import com.wuzeyong.batch.executor.BaseTask;
+import com.wuzeyong.batch.namespace.entity.batch.FileSet;
 import com.wuzeyong.batch.result.BaseResult;
-
-import java.sql.ResultSet;
 
 /**
  * @author WUZEYONG
  */
-
-public class ProducerExecutorWrapper extends AbstractProducerExecutorWrapper<ResultSet,BaseTask,BaseResult>{
+public class ProducerFileExecutorWrapper extends AbstractProducerExecutorWrapper<FileSet,BaseTask,BaseResult>{
 
     @Override
-    protected ResultSet produceSet() throws Exception {
+    protected FileSet produceSet() throws Exception {
         return this.batchUnit.produceSet();
     }
 
     @Override
-    protected boolean setHasNext(ResultSet set) throws Exception {
+    protected boolean setHasNext(FileSet set) throws Exception {
         return set.next();
     }
 
     @Override
-    protected BaseTask decorateTask(ResultSet resultSet) throws Exception {
-        return this.batchUnit.decorateTask(resultSet);
+    protected BaseTask decorateTask(FileSet set) throws Exception {
+        return this.batchUnit.decorateTask(set);
     }
 
     @Override

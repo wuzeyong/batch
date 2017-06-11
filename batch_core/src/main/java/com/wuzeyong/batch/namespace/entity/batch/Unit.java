@@ -1,5 +1,6 @@
 package com.wuzeyong.batch.namespace.entity.batch;
 
+import com.google.common.base.Preconditions;
 import com.wuzeyong.batch.ExecuteContext;
 import com.wuzeyong.batch.constant.BatchCoreConstant;
 import com.wuzeyong.batch.executor.BatchTaskExecutor;
@@ -102,6 +103,7 @@ public class Unit {
      */
     private List<ProducerExecutorWrapper> loadProducerWrapper() {
         String serverId = System.getProperty("batch.server.id");
+        Preconditions.checkNotNull(serverId);
         List<ProducerExecutorWrapper> producerExecutorWrappers = new ArrayList<ProducerExecutorWrapper>();
         for(PageNode pageNode : pageNodes){
             if(pageNode.getServerId().equals(serverId)){

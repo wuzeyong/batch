@@ -2,14 +2,13 @@ package com.wuzeyong.batch.wrapper;
 
 
 import com.wuzeyong.batch.executor.BaseTask;
+import com.wuzeyong.batch.namespace.entity.batch.FileSet;
 import com.wuzeyong.batch.result.BaseResult;
-
-import java.sql.ResultSet;
 
 /**
  * @author WUZEYONG
  */
-public class ConsumerExecutorWrapper extends AbstractConsumerExecutorWrapper<ResultSet,BaseTask,BaseResult>{
+public class ConsumerFileExecutorWrapper extends AbstractConsumerExecutorWrapper<FileSet,BaseTask,BaseResult>{
 
     @Override
     protected boolean consumeTask(BaseTask task) throws Exception {

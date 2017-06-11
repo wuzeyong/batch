@@ -3,7 +3,7 @@ package com.wuzeyong.batch.wrapper;
 
 import com.wuzeyong.batch.constant.BatchCoreConstant;
 import com.wuzeyong.batch.executor.ExecutorExceptionHandler;
-import com.wuzeyong.batch.namespace.entity.batch.TaskSet;
+import com.wuzeyong.batch.result.ConsumerBaseResult;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -13,54 +13,61 @@ import java.util.concurrent.TimeUnit;
  * @author WUZEYONG
  */
 @Slf4j
-public abstract class AbstractConsumerExecutorWrapper<I,O> extends AbstractExecutorWrapper<I,O>{
+public abstract class AbstractConsumerExecutorWrapper<I,M,O> extends AbstractExecutorWrapper<I,M,O>{
 
     @Override
     protected O doExecute() {
         try {
-            I task;
+            M task;
             while(true){
                 task = this.taskPoolQueue.poll();
                 //若当获取task为空且所有生产者都结束，则可以结束消费数据
-                if(task == null && allProducerThreadsIsOver() ){
+                if(task == null && allProducersDone()){
                     break;
                 }
+
                 if(task == null){
                     task = this.taskPoolQueue.poll(1000, TimeUnit.MICROSECONDS);
                 }
-                //任务处理失败
-                if(log.isTraceEnabled()){
+
+                if(task!= null && log.isTraceEnabled()){
                     log.trace("Consumer Of Unit[{}] in Thread[{}] consume task from TaskPoolQueue:{}",
                             this.batchUnit.getClass().getSimpleName(),Thread.currentThread().getName(),task);
                 }
+
+                //任务处理失败
                 if(task!=null && !consumeTask(task)){
                     handleFailedTask(task);
                 }
             }
             O result = checkResult();
             return result;
-        } catch (InterruptedException e) {
-            log.error("Thread[{}] of producers is Interrupted:{}", Thread.currentThread().getId(), e);
+        }catch (Exception e){
+            log.error("Consumer Thread[{}] Occur Exception", Thread.currentThread().getId());
             //TODO 处理任务线程中断，需通知线程池重新启动线程
-        } catch (Exception e){
             ExecutorExceptionHandler.handleException(e);
+            return returnFailedStatus();
         }
-        return null;
     }
 
-    protected abstract void handleFailedTask(I task);
+    protected abstract void handleFailedTask(M task);
 
     @Override
-    protected TaskSet<I> produceTask() throws Exception {
+    protected I produceSet() throws Exception {
         throw new IllegalAccessException("Consumer don't need to produce tasks!");
     }
 
     @Override
-    protected I decorateTask(TaskSet<I> taskSet) throws Exception {
+    protected M decorateTask(I taskSet) throws Exception {
         throw new IllegalAccessException("Consumer don't need to decorate task!");
     }
 
-    protected boolean allProducerThreadsIsOver(){
+    @Override
+    protected boolean setHasNext(I set) throws Exception {
+        throw new IllegalAccessException("Consumer don't need to check empty set!");
+    }
+
+    protected boolean allProducersDone(){
         Map<Thread,String> producers = ExecutorManager.getProducers();
         if(producers.size() == 0){
             return false;
@@ -72,4 +79,10 @@ public abstract class AbstractConsumerExecutorWrapper<I,O> extends AbstractExecu
         }
         return true;
     }
+
+    private O returnFailedStatus(){
+        ConsumerBaseResult consumerBaseResult = new ConsumerBaseResult();
+        consumerBaseResult.setExecuteStatus(BatchCoreConstant.EXECUTE_STATUS_UNEXECUTE);
+        return (O)consumerBaseResult;
+    };
 }

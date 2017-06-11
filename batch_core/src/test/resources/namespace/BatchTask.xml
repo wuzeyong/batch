@@ -9,12 +9,56 @@
 
     <context:component-scan base-package="com.wuzeyong.batch"></context:component-scan>
 
+    <bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath*:/META-INF/batch.properties</value>
+            </list>
+        </property>
+    </bean>
+
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass">
+            <value>${jdbc.driver}</value>
+        </property>
+        <property name="jdbcUrl">
+            <value>${jdbc.url}</value>
+        </property>
+        <property name="user">
+            <value>${jdbc.username}</value>
+        </property>
+        <property name="password">
+            <value>${jdbc.password}</value>
+        </property>
+        <!--连接池中保留的最小连接数。 -->
+        <property name="minPoolSize" value="10" />
+        <!--连接池中保留的最大连接数。Default: 15 -->
+        <property name="maxPoolSize" value="100" />
+        <!--最大空闲时间,1800秒内未使用则连接被丢弃。若为0则永不丢弃。Default: 0 -->
+        <property name="maxIdleTime" value="1800" />
+        <!--连接关闭时默认将所有未提交的操作回滚。Default: false -->
+        <property name="autoCommitOnClose" value="false"/>
+        <!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default: 3 -->
+        <property name="acquireIncrement" value="3" />
+
+        <property name="initialPoolSize" value="10" />
+        <!--每60秒检查所有连接池中的空闲连接。Default: 0 -->
+        <property name="idleConnectionTestPeriod" value="600" />
+        <!--定义在从数据库获取新连接失败后重复尝试的次数。Default: 30 -->
+        <property name="acquireRetryAttempts" value="1" />
+        <!--两次连接中间隔时间，单位毫秒。Default: 1000 -->
+        <property name="acquireRetryDelay" value="500"/>
+        <!-- 数据库和网络故障恢复之后，pool能继续请求正常资源 -->
+        <property name="breakAfterAcquireFailure" value="false" />
+        <property name="testConnectionOnCheckout" value="false" />
+        <!--定义所有连接测试都执行的测试语句。在使用连接测试的情况下这个一显著提高测试速度。注意：  测试的表必须在初始数据源的时候就存在。Default: null-->
+        <property name="preferredTestQuery" value="select 1"/>
+    </bean>
+
+
+
     <bean class="com.wuzeyong.batch.utils.SpringContextUtils" />
-
-    <!--<bean id="myUnit1" class="com.wuzeyong.batch.unit.MyUnit1"/>-->
-    <!--<bean id="myUnit2" class="com.wuzeyong.batch.unit.MyUnit2"/>-->
-    <!--<bean id="myUnit3" class="com.wuzeyong.batch.unit.MyUnit3"/>-->
-
 
     <!-- 单机批量策略 -->
     <batch:paging-strategy id="testStrategy1" paging-mode="single" total-paging="12" >

@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
  * @author WUZEYONG
  */
 @Slf4j
-public class ManageCommCallable extends AbstractCallableManager<BaseTask,BaseResult> implements Callable<String>{
+public class ManageCommCallable extends AbstractCallableManager implements Callable<String>{
 
     protected Collection<CommExecutorWrapper> commExecutorWrappers;
 

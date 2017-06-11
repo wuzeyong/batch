@@ -6,15 +6,16 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Created by wzy on 2017/5/11.
+ * @author WUZEYONG
  */
 @Setter
 @Getter
 @ToString
 public class MyUnitTask implements BaseTask {
+
     private String str;
 
-    private Long aLong;
+    private Double aLong;
 
     private Integer integer;
 }

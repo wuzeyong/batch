@@ -9,8 +9,8 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.wuzeyong.batch.namespace.entity.batch.*;
 import com.wuzeyong.batch.namespace.entity.config.*;
-import com.wuzeyong.batch.utils.AnnotationUtils;
 import com.wuzeyong.batch.utils.DataConvertUtil;
+import com.wuzeyong.batch.utils.SpringContextUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
@@ -63,7 +63,7 @@ public class BatchRuleBuilder {
     }
 
     private Target buildTarget(TargetConfig targetConfig) {
-        final List<BatchUnit> batchUnits = AnnotationUtils.getBatchUnitByAnnotation(BusinessUnit.class);
+        final List<BatchUnit> batchUnits = Lists.newArrayList(SpringContextUtils.getBeansOfType(BatchUnit.class).values());
         final Target target = new Target();
         target.setId(targetConfig.getId());
         target.setName(targetConfig.getName());
