@@ -1,2 +1,2 @@
 # batch
-Batch for dealing with huge data
+Batch based on spring for dealing with huge data
