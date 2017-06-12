@@ -8,14 +8,6 @@ files will wrap into ResultSet and FileSet,and then they decorate to one single 
 extend BaseTask.java, one single task can be consumed by consumeTask method.'PC Mode' and 'Comm Mode' are provided to support this workflow.'PC Mode' means that producer produces data
 and consumer consumes data.Of course,'Comm Mode' means that one person both produce data and consume data.
 
-Road Map:
-1.One application can be deployed on multi-servers,every server's task is configured in advance!
-2.One distributed batch application which is made of resource manager and business manager,
-resource manager focus on monitoring business manager's heartbeats and adjust business manager's task
-configuration dynamically!
-3.One scheduling platform can provide multi-tenant batch to focus their business logic,tenant don't
-need to care about batch's health.
-
 Unfinished...
 
 
